@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="gallery-container">
+                    <button id="prevBtn" class="btn btn-primary">&#8592;</button>
+                    <img id="galleryImage" src="images/img1.jpg" alt="Gallery Image" class="img-fluid">
+                    <button id="nextBtn" class="btn btn-primary">&#8594;</button>
+                </div>
+                <div class="options mt-3">
+                    <button class="btn btn-outline-primary" id="editBtn">Edit</button>
+                    <button class="btn btn-outline-primary" id="detailsBtn">Details</button>
+                    <button class="btn btn-outline-primary" id="zoomBtn">Zoom</button>
+                    <button class="btn btn-outline-primary" id="shareBtn">Share</button>
+                    <button class="btn btn-outline-success" id="insertBtn">Insert Photo</button>
+                    <button class="btn btn-outline-danger" id="deleteBtn">Delete Photo</button>
+                </div>
+                <div class="thumbnails" id="thumbnails"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Details -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Image Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="detailsContent"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="brightness">Brightness (0-200):</label>
+                        <input type="range" class="form-control-range" id="brightness" min="0" max="200" value="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="contrast">Contrast (0-200):</label>
+                        <input type="range" class="form-control-range" id="contrast" min="0" max="200" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="applyEdit">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Zoom -->
+    <div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="zoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="zoomModalLabel">Zoom Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="zoomLevel">Zoom Level (50-200%):</label>
+                        <input type="range" class="form-control-range" id="zoomLevel" min="50" max="200" value="100">
+                    </div>
+                    <div class="text-center">
+                        <img id="zoomImage" src="" alt="Zoomed Image" class="img-fluid">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="applyZoom">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Image Share -->
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">Share Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="shareLink">Image Link:</label>
+                        <input type="text" class="form-control" id="shareLink" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="shareEmail">Email:</label>
+                        <input type="email" class="form-control" id="shareEmail" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="shareMessage">Message:</label>
+                        <textarea class="form-control" id="shareMessage" rows="3" placeholder="Enter message"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="sendShare">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Insert Photo -->
+    <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="insertModalLabel">Insert Photo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="photoUpload">Upload Image:</label>
+                        <input type="file" class="form-control-file" id="photoUpload" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="uploadPhoto">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
